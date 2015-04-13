@@ -1,0 +1,12 @@
+- mehrere Clients pro Benutzer
+- slim Client: Integrationstest des Servers
+- History / Verlauf abrufbar
+- Verschiedene Server mit Authorisierung
+	=> Falls einzelne Komponente ausfällt immer noch lauffähig
+- Authorisierung an jedem Server möglich
+- Persistierung der Nachrichten auf allen Servern / Nodes
+- Kein Datenschutz
+- Clients pullen, Server pushen
+- Nachrichten so schnell wie möglich auf alle Server
+- ein Chatroom => alle schreibe an alle
+- E-Mail + Passwort

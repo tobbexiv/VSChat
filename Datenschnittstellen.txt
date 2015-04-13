@@ -1,0 +1,61 @@
+Client <-> Server
+
+Nutzer anlegen:
+{
+	"userid": String,
+	"username": String,
+	"password": String
+}
+
+Auth
+{
+	"userid": String,
+	"password": String
+}
+
+Nachricht senden
+{
+	"message": String
+}
+
+Alle Nachrichten Abrufen
+{
+	"messages": [
+		{
+			"username": String,
+			"message": String,
+			"sent": Timestamp
+		}
+	]
+}
+
+Server <-> Server
+
+Anmelden am Verbund
+{
+	"host": String,
+	"secret": String
+}
+
+Nutzer verteilen:
+{
+	"username": String,
+	"userid": String,
+	"passwordhash": String,
+	"secret": String
+}
+
+Nachricht verteilen:
+{
+	"uuid": String,
+	"sent": Timestamp,
+	"userid": String,
+	"message": String,
+	"secret": String
+}
+
+Abmelden vom Verbund:
+{
+	"host": String,
+	"secret": String
+}

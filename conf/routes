@@ -4,9 +4,14 @@
 
 # Home page
 GET     /                           controllers.Client.index()
-# GET		/register					controllers.Client.register()
-# GET		/login						controllers.Client.login()
-# GET		/chat						controllers.Client.chat()
+GET		/register					controllers.Client.register()
+POST	/register					controllers.Client.doRegister()
+GET		/login						controllers.Client.login()
+POST	/login						controllers.Client.doLogin()
+GET		/logout						controllers.Client.logout()
+GET		/chat						controllers.Client.chat()
+GET		/sendMessage				controllers.Client.sendMessage()
+GET		/messages/:lastXHours		controllers.Client.getMessages(lastXHours: Int)
 
 # Server communication
 GET		/server/register			controllers.Server.register()

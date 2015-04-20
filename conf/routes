@@ -3,7 +3,17 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                           controllers.Client.index()
+# GET		/register					controllers.Client.register()
+# GET		/login						controllers.Client.login()
+# GET		/chat						controllers.Client.chat()
+
+# Server communication
+GET		/server/register			controllers.Server.register()
+GET		/server/unregister			controllers.Server.unregister()
+GET		/server/push/server			controllers.Server.pushServer()
+GET		/server/push/user			controllers.Server.pushUser()
+GET		/server/push/message		controllers.Server.pushMessage()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

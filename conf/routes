@@ -10,8 +10,9 @@ GET		/login						controllers.Client.login()
 POST	/login						controllers.Client.doLogin()
 GET		/logout						controllers.Client.logout()
 GET		/chat						controllers.Client.chat()
-GET		/sendMessage				controllers.Client.sendMessage()
-GET		/messages/:lastXHours		controllers.Client.getMessages(lastXHours: Int)
+POST	/sendMessage				controllers.Client.sendMessage()
+GET		/messages/byTime/:lastXHours	controllers.Client.getMessagesByTime(lastXHours: Int)
+GET		/messages/byId/:id			controllers.Client.getMessagesById(id: Long)
 
 # Server communication
 GET		/server/register			controllers.Server.register()
@@ -19,6 +20,8 @@ GET		/server/unregister			controllers.Server.unregister()
 GET		/server/push/server			controllers.Server.pushServer()
 GET		/server/push/user			controllers.Server.pushUser()
 GET		/server/push/message		controllers.Server.pushMessage()
+GET		/server/inform/messages		controllers.Server.getInformedMessages()
+GET		/server/inform/users		controllers.Server.getInformedUsers()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

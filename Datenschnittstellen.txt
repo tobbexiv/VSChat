@@ -39,7 +39,7 @@ Anmelden am Verbund
 Nutzer verteilen:
 {
 	"username": String,
-	"passwordhash": String,
+	"password": String,
 	"secret": String
 }
 

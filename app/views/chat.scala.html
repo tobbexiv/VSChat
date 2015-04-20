@@ -1,0 +1,55 @@
+@()
+
+@main("Chat") {
+	<a href="@routes.Client.logout()">Ausloggen</a>
+	<div id="content"></div>
+	<label for="message">Nachricht:</label><input id="message" name="message" type="text" /><input id="submit" type="button" value="Senden" />
+	<label for="message">Lade Nachrichten seit:</label><select id="getOld" name="getOld">
+		<option value="0">keine</option>
+		<option value="1">1 Stunde</option>
+		<option value="6">6 Stunden</option>
+		<option value="12">12 Stunden</option>
+		<option value="24">1 Tag</option>
+		<option value="168">1 Woche</option>
+		<option value="-1">alle</option>
+	</select><input id="load" type="button" value="Laden" />
+	
+	<script type="text/javascript">
+		$('#submit').on('click', function(event){
+			var message = $('#message').val();
+			$('#message').val('');
+			
+			$.ajax({
+				url:			'@routes.Client.sendMessage()',
+				contentType:	'application/json; charset=utf-8',
+				dataType:		'json',
+				data:			JSON.stringify({ message: message }),
+				method:			'POST'
+			}).done(function(data) {
+				console.log(data);
+			})
+		});
+		
+		$('#load').on('click', function(event){
+			$.ajax({
+				url:			'/messages/byTime/' + $('#getOld option:selected').val(),
+				contentType:	'application/json; charset=utf-8',
+				method:			'GET'
+			}).done(function(data) {
+				console.log(data);
+			})
+		});
+		
+		var lastId = 1;
+		
+		setInterval(function() {
+			$.ajax({
+				url:			'/messages/byId/' + lastId,
+				contentType:	'application/json; charset=utf-8',
+				method:			'GET'
+			}).done(function(data) {
+				console.log(data);
+			})
+		}, 1000);
+	</script>
+}

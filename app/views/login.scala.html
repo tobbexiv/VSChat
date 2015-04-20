@@ -1,0 +1,12 @@
+@()
+
+@main("Login") {
+
+	<form method="POST" action="@routes.Client.doLogin()">
+		<label for="username">Name:</label><input id="username" name="username" type="text">
+
+		<label for="password">Passwort:</label><input id="password" name="password" type="password">
+		
+		<input type="submit" value="Absenden"><a href="@routes.Client.register()">Registrieren</a>
+	</form>
+}

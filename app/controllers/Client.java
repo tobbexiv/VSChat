@@ -18,10 +18,13 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Client extends Controller {
 	public static Result index() {
+		if(!ServerHelper.isInitialized()) {
+			return redirect(controllers.routes.Server.init());
+		}
+		
 		if(Client.isLoggedIn()) {
 			return redirect(controllers.routes.Client.chat());
         }
@@ -56,7 +59,7 @@ public class Client extends Controller {
     	User user = new User(username, password);
     	Ebean.save(user);
     	
-    	ServerHelper.sendToAll("/server/push/user", Json.toJson(user));
+    	ServerHelper.sendToAll(controllers.routes.Server.pushUser().url(), Json.toJson(user));
     	
     	session("loggedIn", "true");
     	session("username", username);
@@ -90,7 +93,7 @@ public class Client extends Controller {
     
     public static Result logout() {
     	session().clear();
-    	return redirect(controllers.routes.Client.index());
+    	return redirect(controllers.routes.Client.index().url());
     }
     
     public static Result chat() {
@@ -114,7 +117,7 @@ public class Client extends Controller {
 		Message message = new Message(messageText, sender);
 		Ebean.save(message);
 		
-		ServerHelper.sendToAll("/server/push/message", Json.toJson(message));
+		ServerHelper.sendToAll(controllers.routes.Server.pushMessage().url(), Json.toJson(message));
 		
     	return ok(Json.stringify(Json.toJson(message)));
     }
@@ -147,6 +150,16 @@ public class Client extends Controller {
     }
     
     private static boolean isLoggedIn() {
-    	return session("loggedIn") != null && session("loggedIn").compareTo("true") == 0;
+    	boolean sessionExists = session("loggedIn") != null && session("username") != null && session("loggedIn").compareTo("true") == 0;
+    	
+    	if(sessionExists) {
+    		sessionExists = Ebean.find(User.class).where().eq("username", session("username")).findUnique() != null;
+    	}
+    	
+    	if(!sessionExists) {
+    		session().clear();
+    	}
+    	
+    	return sessionExists;
     }
 }

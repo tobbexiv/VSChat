@@ -1,0 +1,12 @@
+@()
+
+@main("Init Server") {
+
+	<form method="POST" action="@routes.Server.doInit()">
+		<label for="ownHost">Eigener Host:</label><input id="ownHost" name="ownHost" type="text">
+
+		<label for="connectTo">Verbinde zu Host (optional):</label><input id="connectTo" name="connectTo" type="text">
+		
+		<input type="submit" value="Einrichten">
+	</form>
+}

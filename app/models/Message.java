@@ -47,12 +47,19 @@ public class Message {
 	public int getUUID() {
 		return this.UUID;
 	}
+	
 	public String getMessage() {
 		return this.message;
 	}
+	
 	public String getSender() {
 		return this.sender.getUsername();
 	}
+	
+	public long getSentTimeAsLong() {
+		return this.sent.getTime();
+	}
+	
 	public String getSentTime() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		return sdf.format(this.sent);

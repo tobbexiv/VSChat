@@ -15,13 +15,15 @@ GET		/messages/byTime/:lastXHours	controllers.Client.getMessagesByTime(lastXHour
 GET		/messages/byId/:id			controllers.Client.getMessagesById(id: Long)
 
 # Server communication
-GET		/server/register			controllers.Server.register()
-GET		/server/unregister			controllers.Server.unregister()
-GET		/server/push/server			controllers.Server.pushServer()
-GET		/server/push/user			controllers.Server.pushUser()
-GET		/server/push/message		controllers.Server.pushMessage()
-GET		/server/inform/messages		controllers.Server.getInformedMessages()
-GET		/server/inform/users		controllers.Server.getInformedUsers()
+GET		/server/init				controllers.Server.init()
+POST	/server/init				controllers.Server.doInit()
+POST	/server/register			controllers.Server.register()
+POST	/server/unregister			controllers.Server.unregister()
+POST	/server/push/server			controllers.Server.pushServer()
+POST	/server/push/user			controllers.Server.pushUser()
+POST	/server/push/message		controllers.Server.pushMessage()
+POST	/server/inform/messages		controllers.Server.getInformedMessages()
+POST	/server/inform/users		controllers.Server.getInformedUsers()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

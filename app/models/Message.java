@@ -64,4 +64,8 @@ public class Message {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		return sdf.format(this.sent);
 	}
+	
+	public boolean canBeSaved() {
+		return this.UUID != 0 && this.sender != null;
+	}
 }

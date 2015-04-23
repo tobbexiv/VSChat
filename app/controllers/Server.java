@@ -100,7 +100,6 @@ public class Server extends Controller {
     public static Result pushMessage() throws JsonParseException, JsonMappingException, IOException {
 		JsonNode json = request().body().asJson();
 		
-		
 		int		UUID		= json.findPath("uuid").intValue();
 		String	messageText	= json.findPath("message").textValue();
 		String	username	= json.findPath("sender").textValue();
@@ -115,41 +114,38 @@ public class Server extends Controller {
     }
 	
 	@BodyParser.Of(BodyParser.Json.class)
-    public static Result getInformedMessages() throws JsonParseException, JsonMappingException, IOException {
+	public static Result getInformed() throws JsonParseException, JsonMappingException, IOException {
 		JsonNode json = request().body().asJson();
 		
-		Message message;
+		getInformedUsers(json.findPath("users"));
+		getInformedMessages(json.findPath("messages"));
 		
-		for (Iterator iterator = json.iterator(); iterator.hasNext();) {
-			JsonNode single = (JsonNode) iterator.next();
+		return ok();
+	}
+	
+    private static void getInformedMessages(JsonNode messages) {
+		for (Iterator iterator = messages.iterator(); iterator.hasNext();) {
+			JsonNode singleMessage = (JsonNode) iterator.next();
 			
-			int		UUID		= single.findPath("uuid").intValue();
-			String	messageText	= single.findPath("message").textValue();
-			String	username	= single.findPath("sender").textValue();
+			int		UUID		= singleMessage.findPath("uuid").intValue();
+			String	messageText	= singleMessage.findPath("message").textValue();
+			String	username	= singleMessage.findPath("sender").textValue();
 			User	sender		= Ebean.find(User.class).where().eq("username", username).findUnique();
-			long	sentTime	= single.findPath("sentTimeAsLong").longValue();
+			long	sentTime	= singleMessage.findPath("sentTimeAsLong").longValue();
 			Timestamp	sent	= new Timestamp(sentTime);
 			
-			message = new Message(UUID, messageText, sender, sent);
+			Message message = new Message(UUID, messageText, sender, sent);
 			ServerHelper.storeMessage(message);
 		}
-		
-		return ok();
     }
 	
-	public static Result getInformedUsers() throws JsonParseException, JsonMappingException, IOException {
-		JsonNode json = request().body().asJson();
-		
-		User user;
-		
-		for (Iterator iterator = json.iterator(); iterator.hasNext();) {
-			JsonNode single = (JsonNode) iterator.next();
+	private static void getInformedUsers(JsonNode users) throws JsonParseException, JsonMappingException, IOException {
+		for (Iterator iterator = users.iterator(); iterator.hasNext();) {
+			JsonNode singleUser = (JsonNode) iterator.next();
 			
-			user = mapper.readValue(single.toString(), User.class);
+			User user = mapper.readValue(singleUser.toString(), User.class);
 			ServerHelper.storeUser(user);
 		}
-		
-		return ok();
     }
 	
 	private static void informServer(String host) throws JsonProcessingException {
@@ -164,7 +160,10 @@ public class Server extends Controller {
 			ServerHelper.sendToServer(host + controllers.routes.Server.pushServer().url(), result);
 		}
 		
-		ServerHelper.sendToServer(host + controllers.routes.Server.getInformedUsers().url(), Json.toJson(Ebean.find(User.class).findList()));
-		ServerHelper.sendToServer(host + controllers.routes.Server.getInformedMessages().url(), Json.toJson(Ebean.find(Message.class).orderBy("sent").findList()));
+		ObjectNode userMessageJson = Json.newObject();
+		userMessageJson.put("users",	Json.toJson(Ebean.find(User.class).findList()));
+		userMessageJson.put("messages",	Json.toJson(Ebean.find(Message.class).orderBy("sent").findList()));
+		
+		ServerHelper.sendToServer(host + controllers.routes.Server.getInformed().url(), userMessageJson);
 	}
 }

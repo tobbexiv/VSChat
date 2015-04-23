@@ -6,6 +6,7 @@ import java.util.List;
 
 import models.Message;
 import models.User;
+import play.libs.F.Promise;
 import play.libs.Json;
 import play.libs.ws.WS;
 
@@ -42,7 +43,7 @@ public class ServerHelper {
     }
     
     public static void storeMessage(Message message) {
-		if(Ebean.find(Message.class).where().eq("UUID", message.getUUID()).findUnique() == null) {
+		if(Ebean.find(Message.class).where().eq("UUID", message.getUUID()).findUnique() == null && message.canBeSaved()) {
 			Ebean.save(message);
 		}
 	}

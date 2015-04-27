@@ -1,4 +1,3 @@
-This is your new Play application
-=================================
+This is a chat for an university project for distributed systems.
 
-This file will be packaged with your application, when using `activator dist`.
+There was no focus on security during development. Therefore passwords are stored non-hashed.

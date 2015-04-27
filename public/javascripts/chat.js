@@ -14,7 +14,9 @@ var Chat = new function() {
 			var newerMessageSent	= 0;
 			
 			if(!_recievedMessages.has(message.id)) {
-				for (var [id, sentTime] of _recievedMessages.entries()) {
+				for (var id of _recievedMessages.keys()) {
+					var sentTime = _recievedMessages.get(id);
+					
 					if(sentTime > message.sentTimeAsLong && (newerMessageSent > sentTime || newerMessageSent === 0)) {
 						newerMessageId		= id;
 						newerMessageSent	= sentTime;

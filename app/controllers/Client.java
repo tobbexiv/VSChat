@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Client extends Controller {
 	public static Result index() {
@@ -33,6 +34,10 @@ public class Client extends Controller {
     }
 	
     public static Result register() {
+    	if(!ServerHelper.isInitialized()) {
+			return redirect(controllers.routes.Server.init());
+		}
+    	
     	if(!Client.isLoggedIn()) {
         	return ok(views.html.register.render());
         }
@@ -41,6 +46,10 @@ public class Client extends Controller {
     }
     
     public static Result doRegister() throws JsonProcessingException {
+    	if(!ServerHelper.isInitialized()) {
+			return redirect(controllers.routes.Server.init());
+		}
+    	
     	if(Client.isLoggedIn()) {
     		redirect(controllers.routes.Client.chat());
         }
@@ -68,6 +77,10 @@ public class Client extends Controller {
     }
     
     public static Result login() {
+    	if(!ServerHelper.isInitialized()) {
+			return redirect(controllers.routes.Server.init());
+		}
+    	
         if(!Client.isLoggedIn()) {
         	return ok(views.html.login.render());
         }
@@ -76,6 +89,10 @@ public class Client extends Controller {
     }
     
     public static Result doLogin() throws JsonParseException, JsonMappingException, IOException {
+    	if(!ServerHelper.isInitialized()) {
+			return redirect(controllers.routes.Server.init());
+		}
+    	
     	String username = Form.form().bindFromRequest().get("username");
     	String password = Form.form().bindFromRequest().get("password");
     	
@@ -97,6 +114,10 @@ public class Client extends Controller {
     }
     
     public static Result chat() {
+    	if(!ServerHelper.isInitialized()) {
+			return redirect(controllers.routes.Server.init());
+		}
+    	
     	if(!Client.isLoggedIn()) {
 			return redirect(controllers.routes.Client.login());
         }
@@ -114,6 +135,9 @@ public class Client extends Controller {
 		
     	User sender = Ebean.find(User.class).where().eq("username", session("username")).findUnique();
     	String messageText = json.findPath("message").textValue().replaceAll("\"", "&quot;");
+    	if(messageText.length() == 0) {
+    		return unauthorized("No content!");
+    	}
 		Message message = new Message(messageText, sender);
 		Ebean.save(message);
 		
@@ -147,6 +171,19 @@ public class Client extends Controller {
     	JsonNode json = Json.toJson(Ebean.find(Message.class).where().gt("id", id).orderBy("sent").findList());
     	
     	return ok(Json.stringify(json));
+    }
+    
+    public static Result getLatestMessageId() {
+    	if(!Client.isLoggedIn()) {
+    		return unauthorized("Not logged in!");
+        }
+    	
+    	long latestId = Ebean.find(Message.class).orderBy().desc("id").setMaxRows(1).findUnique().getId();
+    	
+    	ObjectNode result = Json.newObject();
+		result.put("latestId", latestId);
+		
+		return ok(result);
     }
     
     private static boolean isLoggedIn() {

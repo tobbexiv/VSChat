@@ -13,6 +13,7 @@ GET		/chat						controllers.Client.chat()
 POST	/sendMessage				controllers.Client.sendMessage()
 GET		/messages/byTime/:lastXHours	controllers.Client.getMessagesByTime(lastXHours: Int)
 GET		/messages/byId/:id			controllers.Client.getMessagesById(id: Long)
+GET		/messages/latestId			controllers.Client.getLatestMessageId()
 
 # Server communication
 GET		/server/init				controllers.Server.init()

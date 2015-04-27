@@ -1,12 +1,23 @@
 @()
 
 @main("Registrieren") {
-
-	<form method="POST" action="@routes.Client.doRegister()">
-		<label for="username">Name:</label><input id="username" name="username" type="text">
-
-		<label for="password">Passwort:</label><input id="password" name="password" type="password">
-		
-		<input type="submit" value="Registrieren">
+	<form class="form-horizontal" method="post" action="@routes.Client.doRegister()">
+		<div class="form-group">
+			<label for="username" class="col-sm-1 control-label">Name</label>
+			<div class="col-sm-4">
+				<input id="username" name="username" type="text" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="password" class="col-sm-1 control-label">Passwort</label>
+			<div class="col-sm-4">
+				<input id="password" name="password" type="password" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-1 col-sm-4">
+				<input class="btn btn-primary" type="submit" value="Registrieren">
+			</div>
+		</div>
 	</form>
 }
